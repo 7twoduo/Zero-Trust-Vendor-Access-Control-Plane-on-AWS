@@ -1,1 +1,0 @@
-Findings Ingestor service.
