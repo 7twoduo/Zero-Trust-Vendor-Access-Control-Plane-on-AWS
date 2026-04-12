@@ -63,3 +63,6 @@ fedramp-zero-trust-mvp/
     └── collect-evidence.sh
 ``` 
 
+
+
+Built a zero-trust AWS access-control MVP using Terraform, API Gateway, Lambda, IAM, STS, DynamoDB, S3, KMS, and CloudTrail that enforced approval-based, time-bound access to a protected API with auditable evidence generation.
