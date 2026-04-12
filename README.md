@@ -32,7 +32,7 @@ A minimal AWS project that demonstrates approval-based, time-bound partner acces
 - `docs/controls.md`
 
 # Folder Structure
-
+''' markdown
 fedramp-zero-trust-mvp/
 ├── README.md
 ├── docs/
