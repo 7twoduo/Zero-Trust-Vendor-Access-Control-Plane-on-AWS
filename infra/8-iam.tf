@@ -19,7 +19,10 @@ resource "aws_iam_role" "lambda_exec" {
 
   tags = local.common_tags
 }
-# This creates an inline policy that will be attached to a lambda role and grants it permissions to interact with CloudWatch Logs, DynamoDB, S3, KMS, and to assume the partner access role. This policy is essential for the lambda function to perform its tasks, such as logging, managing access requests, handling evidence in S3, and assuming roles for partner access when needed.
+# This is a policy that gives the lambda function the permission to write 
+# logs to cloudwatch, access the dynamodb table, interact with the s3 for evidence storage, use 
+# the kms key for encryption, and assume the partner access role when needed. By attaching this policy to the lambda execution role, 
+# we ensure that our lambda function has the necessary permissions to perform its tasks securely and effectively within our architecture.  
 data "aws_iam_policy_document" "lambda_inline" {
   statement {
     sid    = "CloudWatchLogs"
@@ -31,7 +34,7 @@ data "aws_iam_policy_document" "lambda_inline" {
       "logs:PutLogEvents"
     ]
 
-    resources = ["*"]
+    resources = ["*"] # This permsisson is too wide, scope it down to only the resource it needs access to in production
   }
 
   statement {
@@ -83,7 +86,7 @@ data "aws_iam_policy_document" "lambda_inline" {
       aws_kms_key.evidence.arn
     ]
   }
-
+# This statement gives the function the ability to create temporary credentials for this role and give it to users.
   statement {
     sid    = "AssumePartnerAccessRole"
     effect = "Allow"
@@ -103,7 +106,7 @@ resource "aws_iam_role_policy" "lambda_inline" {
   role   = aws_iam_role.lambda_exec.id
   policy = data.aws_iam_policy_document.lambda_inline.json
 }
-# This 
+# This is a policy to 
 data "aws_iam_policy_document" "partner_access_assume_role" {
   statement {
     effect = "Allow"
@@ -116,7 +119,8 @@ data "aws_iam_policy_document" "partner_access_assume_role" {
     actions = ["sts:AssumeRole"]
   }
 }
-
+# This is the IAM role that will be assumed by the person the lambda function grants access to
+# when they invoke the function to get temporary access to the protected route.
 resource "aws_iam_role" "partner_access_role" {
   name               = "${local.name_prefix}-partner-access"
   assume_role_policy = data.aws_iam_policy_document.partner_access_assume_role.json
