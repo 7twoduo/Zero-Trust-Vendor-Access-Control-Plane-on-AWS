@@ -3,7 +3,7 @@
 A minimal AWS project that demonstrates approval-based, time-bound partner access to one protected resource with evidence generation and auditability.
 
 
-![alt text](image.png)
+![alt text](image-1.png)
 
 
 
