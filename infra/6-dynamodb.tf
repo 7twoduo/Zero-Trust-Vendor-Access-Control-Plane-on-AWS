@@ -2,7 +2,7 @@
 # This DynamoDB table will store the access requests from partners, including their status (pending, approved, revoked), timestamps, and any other relevant metadata. This allows us to have a durable, queryable store for all access requests, which is essential for both the functionality of the system and for audit purposes.
 resource "aws_dynamodb_table" "access_requests" {
   name         = "${local.name_prefix}-access-requests"
-  billing_mode = "PAY_PER_REQUEST"
+  billing_mode = "PAY_PER_REQUEST" # the billing model, it is serverless mostly
   hash_key     = "request_id"
 
   attribute {

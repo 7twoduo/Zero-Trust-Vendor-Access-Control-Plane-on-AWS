@@ -40,7 +40,6 @@ Stores:
 - request ID
 - requester identity
 - requested resource
-- request reason
 - approval state
 - approved duration
 - expiration time

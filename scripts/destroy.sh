@@ -9,7 +9,7 @@ echo "Terraform initialized. Validating configuration..."
 terraform validate
 
 echo "Validation successful. Proceeding to plan."
-terraform plan -out=tfplan
+terraform plan -out=tfdestroyplan
 
 echo "Review the plan and apply if everything looks good."
-terraform apply -auto-approve tfplan
+terraform destroy -auto-approve tfdestroyplan
