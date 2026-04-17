@@ -143,17 +143,26 @@ Reviews evidence without requiring broad infrastructure access.
 
 ## 🔄 End-to-End Flow
 
-```text
+
 1. Partner submits access request
+
 2. API Gateway receives the request
+
 3. request_access Lambda validates and stores it in DynamoDB
+
 4. Request status becomes PENDING
+
 5. Approver reviews and triggers approval decision
+
 6. approve_access Lambda grants scoped temporary access if approved
+
 7. Evidence artifact is written to S3
+
 8. revoke_access Lambda checks for expiration and revokes access
+
 9. CloudTrail records AWS API activity for later review
-```
+
+
 ## 🧱 Core AWS Resources
 
 Service	Role in Architecture
@@ -220,7 +229,7 @@ go into 1-provider.tf and change the bucket name to your bucket name
 
 ```text
   backend "s3" {
-    bucket  = "deathless-godx"
+    bucket  = "deathless-godx" # Change this
     key     = "fedramp-zero-trust-mvp/dev/terraform.tfstate"
     region  = "us-east-1"
     encrypt = true
@@ -291,7 +300,7 @@ evidence is updated or added
 
 Inspect CloudTrail for the AWS-side events related to the workflow.
 
-📌 Expected Behavior
+## 📌 Expected Behavior
 
 Request Phase
 
@@ -329,7 +338,7 @@ Evidence Phase
 
 The system stores audit-ready evidence in S3 for review.
 
-🔐 Security Architecture
+## 🔐 Security Architecture
 
 Zero Trust
 
@@ -355,7 +364,7 @@ Reproducible Infrastructure
 
 All infrastructure is provisioned with Terraform for consistency and repeatability.
 
-🧭 Trust Boundaries
+## 🧭 Trust Boundaries
 
 Boundary 1 — External Requester to AWS API
 
@@ -369,7 +378,7 @@ Boundary 3 — Temporary Access Grant to Protected Resource
 
 Any granted access must be temporary, limited, and tied to approval.
 
-🛡️ FedRAMP-Aligned Control Thinking
+## 🛡️ FedRAMP-Aligned Control Thinking
 
 This project is not a full FedRAMP implementation.
 
@@ -390,20 +399,28 @@ SI — System and Information Integrity
 See:
 
 docs/overview.md
+
 docs/architecture.md
+
 docs/controls.md
-⚙️ Engineering Challenges & Solutions
+
+## ⚙️ Engineering Challenges & Solutions
+
 Challenge	Solution
+
+```text
 Managing approval-based access state	Stored request lifecycle data in DynamoDB with explicit state transitions
 Enforcing temporary access	Used expiration logic and revocation workflow to remove access after the approved duration
 Capturing audit evidence	Wrote request and decision artifacts to S3 for later review
 Protecting stored records	Used KMS-backed encryption for secure evidence handling
 Keeping the system reproducible	Managed AWS infrastructure using Terraform
 Maintaining narrow scope	Focused the MVP on one protected resource and one approval-based workflow
-📈 Production Roadmap
+```
+
+## 📈 Production Roadmap
 
 This project is intentionally small. To evolve it into a more production-ready design, the next steps would be:
-
+```text
 multi-account architecture
 stronger identity integration
 admin web UI
@@ -414,10 +431,12 @@ richer evidence reporting
 SIEM integration
 exception handling workflow
 broader protected resource support
-🚧 Current Limitations
+```
+
+##🚧 Current Limitations
 
 The MVP intentionally does not include:
-
+```text
 multi-account AWS isolation
 EKS or Kubernetes
 PrivateLink
@@ -425,26 +444,31 @@ full enterprise admin portal
 advanced policy engine
 threat detection correlation layer
 multi-stage approval routing
+```
 
 These are known gaps and are acceptable for version one because the goal is to prove the core workflow first.
 
-📚 Documentation
+## 📚 Documentation
+
 docs/overview.md
+
 docs/architecture.md
+
 docs/controls.md
-🚀 Why This Project Matters
+
+## 🚀 Why This Project Matters
 
 This project shows practical cloud security engineering through a workflow that is small enough to understand, but serious enough to demonstrate real design thinking.
 
 Instead of relying on standing access, it shows how to build around:
-
+```text
 approval before access
 least privilege
 short-lived permissions
 evidence generation
 auditability
 repeatable infrastructure
-
+```
 It is a good example of building security controls into the access workflow itself, not trying to bolt them on later.
 
 👨‍💻 About the Author
