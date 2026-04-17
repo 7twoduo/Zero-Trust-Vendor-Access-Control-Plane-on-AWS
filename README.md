@@ -181,9 +181,8 @@ fedramp-zero-trust-mvp/
 │   └── revoke_access.py
 └── scripts/
     ├── deploy.sh
-    ├── invoke-request.sh
-    ├── approve-request.sh
-    └── collect-evidence.sh
+    ├── destroy.sh
+    └── invoke-request.sh
 🚀 Quick Start
 1. Clone the repository
 git clone <your-repo-url>
