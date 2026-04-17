@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "Invoke request placeholder"
-BASE_URL="https://4epsuu8t51.execute-api.us-east-1.amazonaws.com"
+BASE_URL="https://sk1ehmd35f.execute-api.us-east-1.amazonaws.com"
 
 curl -s -X POST "$BASE_URL/request" \
   -H "Content-Type: application/json" \

@@ -134,17 +134,18 @@ data "aws_iam_policy_document" "partner_access_invoke" {
     effect = "Allow"
 
     actions = [
-      "execute-api:Invoke"
+      "execute-api:Invoke" # They can only invoke the api and nothing else.
     ]
 
-    resources = [
+    resources = [ # this is the api that the partner can access, I can expand the access however I want.
       "${aws_apigatewayv2_api.main.execution_arn}/${aws_apigatewayv2_stage.default.name}/GET/partner/resource"
     ]
   }
 }
-
+# This attaches a policy to the partner access role that allows it to invoke the protected route in the API Gateway. By attaching this policy, we ensure that when a user assumes this role, they will have the necessary permissions to access the protected route as intended.
 resource "aws_iam_role_policy" "partner_access_invoke" {
   name   = "${local.name_prefix}-partner-invoke-protected-route"
   role   = aws_iam_role.partner_access_role.id
   policy = data.aws_iam_policy_document.partner_access_invoke.json
 }
+

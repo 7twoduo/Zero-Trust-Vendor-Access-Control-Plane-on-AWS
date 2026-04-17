@@ -26,7 +26,7 @@ variable "lambda_runtime" {
 variable "log_retention_days" {
   description = "CloudWatch log retention."
   type        = number
-  default     = 14
+  default     = 7 # expire time
 }
 
 variable "revoke_schedule_expression" {
