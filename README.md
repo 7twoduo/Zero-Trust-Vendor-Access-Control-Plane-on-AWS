@@ -34,6 +34,10 @@ This project is intentionally small, but it still demonstrates serious security 
 - infrastructure as code
 
 ---
+# Architecture
+
+<img width="1200" height="653" alt="Image" src="https://github.com/user-attachments/assets/bce8784e-f834-4ec1-93e9-e6bd1598fe9d" />
+
 
 ## 🧠 Problem Statement
 
@@ -62,6 +66,11 @@ That creates real security risk:
 - inconsistent access control
 
 ---
+## Demo 
+
+https://github.com/user-attachments/assets/44800500-e0d6-48a2-9d43-d3a902cb936b
+
+
 
 ## 🎯 Project Objective
 
@@ -183,24 +192,38 @@ fedramp-zero-trust-mvp/
     ├── deploy.sh
     ├── destroy.sh
     └── invoke-request.sh
+
 🚀 Quick Start
+
 1. Clone the repository
+
 git clone <your-repo-url>
+
 cd fedramp-zero-trust-mvp
+
 2. Move into infrastructure folder
 cd infra
+
 3. Initialize Terraform
+
 terraform init
+
 4. Review the execution plan
+
 terraform plan
+
 5. Deploy the infrastructure
+
 terraform apply
+
 6. Run test scripts
+
 cd ../scripts
+
 chmod +x *.sh
+
 ./invoke-request.sh
-./approve-request.sh
-./collect-evidence.sh
+
 🧪 Validation & Testing
 
 To validate the workflow end to end:
@@ -210,51 +233,73 @@ To validate the workflow end to end:
 Invoke the request endpoint and confirm a new record is stored in DynamoDB with status:
 
 PENDING
+
 2. Approve the request
 
 Trigger the approval path and verify that:
 
 the request state changes
+
 a temporary access path is granted
+
 evidence is generated
+
 3. Confirm evidence generation
 
 Check S3 and validate that an audit artifact exists containing:
 
 request metadata
+
 requester identity
+
 approval decision
+
 time window
+
 resource scope
+
 timestamps
+
 4. Confirm expiration logic
 
 Wait for the approved duration to expire, then verify that:
 
 access is revoked
+
 expiration state is recorded
+
 evidence is updated or added
+
 5. Review CloudTrail
 
 Inspect CloudTrail for the AWS-side events related to the workflow.
 
 📌 Expected Behavior
+
 Request Phase
 
 A user submits an access request with:
 
 identity
+
 requested resource
+
 requested duration
+
 business reason
+
 Approval Phase
 
 An approver reviews:
 
 who requested access
+
 what resource was requested
+
 why access is needed
+
 how long access is needed
+
 Grant Phase
 
 If approved, the system creates a short-lived and narrowly scoped access path.
@@ -268,6 +313,7 @@ Evidence Phase
 The system stores audit-ready evidence in S3 for review.
 
 🔐 Security Architecture
+
 Zero Trust
 
 No user is trusted by default. Every request must be submitted, reviewed, approved, and logged.
@@ -293,6 +339,7 @@ Reproducible Infrastructure
 All infrastructure is provisioned with Terraform for consistency and repeatability.
 
 🧭 Trust Boundaries
+
 Boundary 1 — External Requester to AWS API
 
 The requester is outside the trusted environment and must enter through validated API calls.
@@ -312,10 +359,15 @@ This project is not a full FedRAMP implementation.
 It is a FedRAMP-aligned design exercise focused on core access and audit principles:
 
 AC — Access Control
+
 AU — Audit and Accountability
+
 IA — Identification and Authentication
+
 SC — System and Communications Protection
+
 CM — Configuration Management
+
 SI — System and Information Integrity
 
 See:
