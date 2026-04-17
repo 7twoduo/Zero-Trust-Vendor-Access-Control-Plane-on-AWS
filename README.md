@@ -512,13 +512,15 @@ Evidence Written to S3
 CloudTrail + Logs Recorded
      ↓
 Access Expires / Is Revoked
-✨ What This Project Proves
-Area	Value Shown
-Access Control	No uncontrolled standing access
-Security Design	Approval-based, time-bound access model
-Compliance Readiness	Evidence generation and audit trail
-Operational Discipline	Repeatable deployment with Terraform
-Real-World Relevance	Matches how secure organizations reduce risk
+```
+## ✨ What This Project Proves
+| Area | Value Shown |
+|------|-------------|
+| Access Control | No uncontrolled standing access |
+| Security Design | Approval-based, time-bound access model |
+| Compliance Readiness | Evidence generation and audit trail |
+| Operational Discipline | Repeatable deployment with Terraform |
+| Real-World Relevance | Matches how secure organizations reduce risk |
 
 [!TIP]
 This is not just an infrastructure demo.
