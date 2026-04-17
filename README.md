@@ -63,10 +63,6 @@ That creates real security risk:
 - inconsistent access control
 
 ---
-## Demo 
-
-https://github.com/user-attachments/assets/44800500-e0d6-48a2-9d43-d3a902cb936b
-
 
 
 ## 🎯 Project Objective
@@ -80,6 +76,11 @@ Build a minimal AWS-based workflow that grants the **right user** the **right ac
 <img width="1200" height="653" alt="Image" src="https://github.com/user-attachments/assets/bce8784e-f834-4ec1-93e9-e6bd1598fe9d" />
 
 ---
+
+## Demo 
+
+https://github.com/user-attachments/assets/44800500-e0d6-48a2-9d43-d3a902cb936b
+
 
 ## 🧰 Stack
 
@@ -152,17 +153,28 @@ Reviews evidence without requiring broad infrastructure access.
 7. Evidence artifact is written to S3
 8. revoke_access Lambda checks for expiration and revokes access
 9. CloudTrail records AWS API activity for later review
-🧱 Core AWS Resources
+```
+## 🧱 Core AWS Resources
+
 Service	Role in Architecture
+
 Amazon API Gateway	Entry point for request submission and approval actions
+
 AWS Lambda	Handles request, approval, and expiration logic
+
 Amazon DynamoDB	Stores request records, states, grant metadata, and evidence references
+
 AWS IAM / STS	Provides scoped, short-lived access to the protected resource
+
 Amazon S3	Stores audit evidence artifacts
+
 AWS KMS	Encrypts stored records and evidence
+
 AWS CloudTrail	Captures AWS API activity for auditability
-📂 Project Structure
-fedramp-zero-trust-mvp/
+
+## 📂 Project Structure
+```text
+Zero-Trust-Vendor-Access-Control-Plane-on-AWS/
 ├── README.md
 ├── docs/
 │   ├── overview.md
@@ -189,59 +201,67 @@ fedramp-zero-trust-mvp/
     ├── deploy.sh
     ├── destroy.sh
     └── invoke-request.sh
-
-🚀 Quick Start
+```
+## 🚀 Quick Start
 
 1. Clone the repository
 
 git clone <your-repo-url>
 
-cd fedramp-zero-trust-mvp
+cd Zero-Trust-Vendor-Access-Control-Plane-on-AWS
 
 2. Move into infrastructure folder
+
 cd infra
 
-3. Initialize Terraform
+3.
+
+go into 1-provider.tf and change the bucket name to your bucket name
+
+```text
+  backend "s3" {
+    bucket  = "deathless-godx"
+    key     = "fedramp-zero-trust-mvp/dev/terraform.tfstate"
+    region  = "us-east-1"
+    encrypt = true
+    #  use_lockfile = true
+  }
+```
+
+4. Initialize Terraform
 
 terraform init
 
-4. Review the execution plan
+5. Review the execution plan
 
 terraform plan
 
-5. Deploy the infrastructure
+6. Deploy the infrastructure
 
 terraform apply
 
-6. Run test scripts
+7. Run test scripts
 
 cd ../scripts
 
 chmod +x *.sh
 
-./invoke-request.sh
 
-🧪 Validation & Testing
+## 🧪 Validation & Testing
 
 To validate the workflow end to end:
 
-1. Submit a request
+1. Submit and Approve a request through the script.
 
-Invoke the request endpoint and confirm a new record is stored in DynamoDB with status:
+From the previous ran apply, copy the first url
 
-PENDING
+Go into invoke-request.sh and change BASE_URL at line 3 to the url you copied.
 
-2. Approve the request
+Run the script with ./invoke-request.sh in the terminal
 
-Trigger the approval path and verify that:
+It will give you the aws creds, use them and invoke the test api endpoint if you want to go that far.
 
-the request state changes
-
-a temporary access path is granted
-
-evidence is generated
-
-3. Confirm evidence generation
+2. Confirm evidence generation
 
 Check S3 and validate that an audit artifact exists containing:
 
@@ -257,7 +277,7 @@ resource scope
 
 timestamps
 
-4. Confirm expiration logic
+3. Confirm expiration logic
 
 Wait for the approved duration to expire, then verify that:
 
@@ -267,7 +287,7 @@ expiration state is recorded
 
 evidence is updated or added
 
-5. Review CloudTrail
+4. Review CloudTrail
 
 Inspect CloudTrail for the AWS-side events related to the workflow.
 
