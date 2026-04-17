@@ -34,9 +34,6 @@ This project is intentionally small, but it still demonstrates serious security 
 - infrastructure as code
 
 ---
-# Architecture
-
-<img width="1200" height="653" alt="Image" src="https://github.com/user-attachments/assets/bce8784e-f834-4ec1-93e9-e6bd1598fe9d" />
 
 
 ## 🧠 Problem Statement
@@ -80,7 +77,7 @@ Build a minimal AWS-based workflow that grants the **right user** the **right ac
 
 ## 🏗️ Architecture Diagram
 
-![Architecture Diagram](image-1.png)
+<img width="1200" height="653" alt="Image" src="https://github.com/user-attachments/assets/bce8784e-f834-4ec1-93e9-e6bd1598fe9d" />
 
 ---
 
