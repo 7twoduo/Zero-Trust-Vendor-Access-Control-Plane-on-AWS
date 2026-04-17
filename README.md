@@ -404,18 +404,18 @@ docs/architecture.md
 
 docs/controls.md
 
-## ⚙️ Engineering Challenges & Solutions
+## ⚙️ Engineering Challenges and Key Architectural Decisions
 
-Challenge	Solution
-
-```text
-Managing approval-based access state	Stored request lifecycle data in DynamoDB with explicit state transitions
-Enforcing temporary access	Used expiration logic and revocation workflow to remove access after the approved duration
-Capturing audit evidence	Wrote request and decision artifacts to S3 for later review
-Protecting stored records	Used KMS-backed encryption for secure evidence handling
-Keeping the system reproducible	Managed AWS infrastructure using Terraform
-Maintaining narrow scope	Focused the MVP on one protected resource and one approval-based workflow
-```
+| Problem | Why It Mattered | Architectural Decision | Implementation |
+|---|---|---|---|
+| Managing approval-based access state | The workflow needed a clear way to track a request from submission to approval, denial, expiration, and evidence generation. Without structured state handling, the process would become inconsistent and hard to audit. | Use DynamoDB as the system of record for request lifecycle state. Model each request with explicit statuses such as `PENDING`, `APPROVED`, `DENIED`, and `EXPIRED`. | Stored request lifecycle data in DynamoDB with explicit state transitions and request metadata. |
+| Enforcing temporary access | The project needed to prove that access was not permanent. Time-bound access is one of the most important zero-trust and compliance-aligned design requirements. | Use short-lived grants and a separate revocation path rather than standing access. Keep the expiration logic outside the approval action so access can be checked and removed reliably. | Used expiration logic and a revocation workflow to remove access after the approved duration. |
+| Capturing audit evidence | The system needed more than logs. It needed durable, reviewable evidence that could support audits, investigations, and compliance discussions. | Write structured evidence artifacts to S3 instead of relying only on transient execution logs. Keep evidence separate from application runtime state. | Wrote request, approval, grant, and expiration artifacts to S3 for later review. |
+| Protecting stored records | Evidence and request metadata should not be easy to tamper with or expose. Stored records needed confidentiality and stronger protection. | Use S3 for durable storage and protect it with KMS-backed encryption. Restrict access through scoped IAM permissions. | Used KMS-backed encryption and controlled access to secure evidence and stored records. |
+| Keeping the system reproducible | A manual build would weaken consistency, make testing harder, and reduce credibility as an engineering project. | Define all core infrastructure in Terraform so the environment can be recreated consistently and reviewed as code. | Managed AWS infrastructure using Terraform across API, Lambda, DynamoDB, IAM, S3, KMS, and CloudTrail resources. |
+| Maintaining narrow scope | The full partner-access problem can become too large very quickly. A smaller scope was needed so the MVP could stay understandable and actually be completed. | Limit the MVP to one protected resource, one approval workflow, and one evidence path. Defer advanced features to future phases. | Focused the MVP on one protected resource and one approval-based workflow to keep the design small, testable, and explainable. |
+| Producing AWS-native audit visibility | Internal workflow evidence alone is not enough. The project also needed AWS-side visibility into actions taken across the environment. | Use CloudTrail as the native audit layer for AWS API activity, and pair it with S3 evidence artifacts for application-level traceability. | Enabled CloudTrail-backed audit visibility alongside application-generated evidence records. |
+| Separating workflow logic cleanly | Combining request, approval, and revocation into one function would make the design harder to reason about and harder to maintain. | Split the workflow into separate Lambda functions for request submission, approval handling, and revocation processing. | Used dedicated Lambda functions such as `request_access.py`, `approve_access.py`, and `revoke_access.py` for separation of responsibilities. |
 
 ## 📈 Production Roadmap
 
@@ -522,9 +522,9 @@ Access Expires / Is Revoked
 | Operational Discipline | Repeatable deployment with Terraform |
 | Real-World Relevance | Matches how secure organizations reduce risk |
 
-[!TIP]
-This is not just an infrastructure demo.
-It shows how to design a system around control, traceability, and trust.
+
+### This is not just an infrastructure demo.
+### It shows how to design a system around control, traceability, and trust.
 
 👨‍💻 About the Author
 <p align="center"> <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=600&size=22&pause=1000&color=58A6FF&center=true&vCenter=true&width=760&lines=Cloud+Engineer+focused+on+AWS%2C+Terraform%2C+and+automation;Building+production-inspired+infrastructure+projects;Turning+cloud+concepts+into+real-world+implementations" alt="Typing SVG" /> </p> <p align="center"> I build hands-on cloud projects designed to reflect practical engineering work rather than simple demos. My focus is on <b>AWS infrastructure</b>, <b>Infrastructure as Code</b>, <b>automation</b>, <b>security-minded design</b>, and <b>real implementation patterns</b> that translate into production environments. </p> <p align="center"> <img src="https://img.shields.io/badge/AWS-Architecting-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white" /> <img src="https://img.shields.io/badge/Terraform-Infrastructure-7B42BC?style=for-the-badge&logo=terraform&logoColor=white" /> <img src="https://img.shields.io/badge/Cloud-Engineering-1F6FEB?style=for-the-badge" /> <img src="https://img.shields.io/badge/Automation-Building-success?style=for-the-badge" /> </p> <p align="center"> <a href="https://www.linkedin.com/in/gavin-fogwe/"> <img src="https://img.shields.io/badge/LinkedIn-Let's%20Connect-blue?style=for-the-badge&logo=linkedin" /> </a> <a href="https://github.com/gavinxenon0-arch"> <img src="https://img.shields.io/badge/GitHub-See%20More%20Projects-black?style=for-the-badge&logo=github" /> </a> <a href="https://gavinfogwe.win/"> <img src="https://img.shields.io/badge/Portfolio-Explore-orange?style=for-the-badge&logo=googlechrome&logoColor=white" /> </a> </p> ```
